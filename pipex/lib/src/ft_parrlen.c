@@ -1,25 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_parrlen.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/22 16:49:00 by vvoronts         ###   ########.fr       */
+/*   Created: 2024/12/08 10:39:55 by vvoronts          #+#    #+#             */
+/*   Updated: 2024/12/08 10:39:58 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "elibft.h"
 
-# include "libft.h"
-# include "elibft.h"
-# include "ft_printf.h"
+/**
+ * @brief Calculates the length of a NULL-terminated array of pointers.
+ * 
+ * @param arr The NULL-terminated array of pointers.
+ * @return The number of elements in the array, excluding the NULL terminator.
+ */
+size_t	ft_parrlen(void *arr)
+{
+	void	**mem;
+	void	**arr2;
 
-# define SUCCESS 0
-# define ERROR 1
-# define MALLOC 2
-
-
-#endif
+	if (!arr)
+		return (0);
+	arr2 = (void **)arr;
+	mem = arr2;
+	while (*arr2)
+		arr2++;
+	return (arr2 - mem);
+}

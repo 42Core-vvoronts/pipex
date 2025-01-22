@@ -1,105 +1,72 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/01/05 14:07:44 by vvoronts          #+#    #+#              #
-#    Updated: 2025/01/05 14:21:07 by vvoronts         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-# Variables
+# Compilation and flags
 CC					=	cc
-CFLAGS				=	-Wall -Wextra -Werror -g -MMD -MF
 RM					=	rm -rf
+CFLAGS				=	-Wall -Wextra -Werror -g -MMD -MP -MF
+MFLAGS				=	-C
+# Program name
 NAME				=	pipex
-# BONUS_NAME			=	
 
-
+# Directories and paths
 INCLUDE_DIRS		=	./include \
-						./lib/libft \
-						./lib/ft_printf \
+						./lib/include
 
-VPATH				=	./src
+VPATH				=	./src/
 
 INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
 
-SHARED_SRC			= 	\
+SRC 				=	pipex.c \
 
-MANDATORY_SRC 		=	$(SHARED_SRC) \
-						main.c \
+LIB					=	./lib/libft.a \
 
-BONUS_SRC 			=	$(SHARED_SRC) \
+OBJ					=	$(SRC:%.c=obj/$(NAME)/%.o)
 
-LIBS 				=	./lib/libft/libft.a \
+DEP					=	$(SRC:%.c=dep/%.d) $(BONUS_SRC:%.c=dep/%.d)
 
-
-MANDATORY_OBJ		=	$(MANDATORY_SRC:%.c=obj/$(NAME)/%.o)
-BONUS_OBJ			= 	$(BONUS_SRC:%.c=obj/$(BONUS_NAME)/%.o)
-
-DEP					=	$(MANDATORY_SRC:%.c=dep/%.d) $(BONUS_SRC:%.c=dep/%.d)
-
-MFLAGS				= --no-print-directory -C
-
-a: all bonus
 
 all: $(NAME)
-	@echo "Building $(NAME) ..."
+	@echo "$(GREEN)Making $(NAME)...$(RESET)"
 
-bonus: $(BONUS_NAME)
-	@echo "Building $(BONUS_NAME) ..."
-
-$(NAME): $(MANDATORY_OBJ) libs
-	@$(CC) $(MANDATORY_OBJ) $(LIBS) -o $@
-
-$(BONUS_NAME): $(BONUS_OBJ) libs
-	@$(CC) $(BONUS_OBJ) $(LIBS) -o $@
+$(NAME): $(OBJ) libs
+	@$(CC) $(OBJ) $(LIB) -o $@
 
 libs:
-	@make $(MFLAGS) ./lib/libft
-	@make $(MFLAGS) ./lib/ft_printf
+	@make $(MFLAGS) ./lib
 
-obj/$(NAME)/%.o: %.c | mandatory_dep mandatory_obj_dir
+# Object files
+obj/$(NAME)/%.o: %.c | depdir objdir
 	@$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@
 
-obj/$(BONUS_NAME)/%.o: %.c | bonus_dep bonus_obj_dir
-	@$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@
-
-mandatory_obj_dir:
+objdir:
 	@mkdir -p obj
 	@mkdir -p obj/$(NAME)
 
-bonus_obj_dir:
-	@mkdir -p obj
-	@mkdir -p obj/$(BONUS_NAME)
-
-mandatory_dep:
+depdir:
 	@mkdir -p dep
 	@mkdir -p dep/$(NAME)
 
-bonus_dep:
-	@mkdir -p dep
-	@mkdir -p dep/$(BONUS_NAME)
+clean: cleanlib
+	@echo "$(YELLOW)Removing objects and deps...$(RESET)"
+	@$(RM) obj/$(NAME)
+	@$(RM) dep/$(NAME)
+# Clean lib
+cleanlib:
+	@echo "$(YELLOW)Cleaning library...$(RESET)"
+	@make clean $(MFLAGS) ./lib
 
-clean:
-	@echo "Cleaning ..."
-	@$(RM) obj
-	@$(RM) dep
-	@make clean $(MFLAGS) ./lib/libft
-	@make clean $(MFLAGS) ./lib/ft_printf
-
-fclean: clean
+fclean: clean cleanlib
 	@$(RM) $(NAME)
-	@$(RM) $(BONUS_NAME)
-	@make fclean $(MFLAGS) ./lib/libft
-	@make fclean $(MFLAGS) ./lib/ft_printf
+	@echo "$(RED)$(NAME) has been removed$(RESET)"
 
-re: fclean a
+re: fclean all
 
-.PHONY: all clean fclean re bonus libs a
-.DEFAULT_GOAL := a
+.PHONY: all clean fclean re bonus
+.DEFAULT_GOAL := all
 
 # Include the dependency files
 -include $(DEP)
+
+# set colors
+RED					= 	\033[0;31m
+GREEN				= 	\033[0;32m
+YELLOW				= 	\033[0;33m
+RESET				= 	\033[0m
