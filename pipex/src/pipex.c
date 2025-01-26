@@ -11,10 +11,6 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include <fcntl.h>
-#include <unistd.h> 
-#include <sys/wait.h>
-
 
 // open: Open files (infile and outfile).
 // pipe: Create a pipe to connect cmd1 and cmd2.
@@ -25,24 +21,6 @@
 
 // ./pip infile cmd1 cmd2 outfile
 
-typedef struct s_cmd
-{
-	int 	pid;
-	char	**cmd;
-	char	*name;
-	int		fd;
-}	t_cmd;
-
-typedef struct s_pipe
-{
-	t_cmd 		*infile; //left
-	t_cmd 		*outfile; //right
-	int 		newfd[2];
-	char		**paths;
-	
-} t_pipe;
-
-
 int	ft_open(int flag, char *file)
 {
 	int fd;
@@ -52,10 +30,7 @@ int	ft_open(int flag, char *file)
 	else if (flag == 'W')
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
-	{
-		ft_printf("Error fd\n");
-		exit(1);
-	}
+		handle_error(OPEN_FAIL, NULL);
 	return (fd);
 }
 
@@ -83,10 +58,7 @@ char *peek(char **paths, char *cmd)
     {
         command = ft_strdup(cmd);
         if (!command)
-		{
-            printf("Error: Memory allocation failed\n");
-			exit(1);
-		}
+			handle_error(MALLOC_FAIL, NULL);
         return (command);
     }
 
@@ -105,26 +77,7 @@ char *peek(char **paths, char *cmd)
     return (NULL);
 }
 
-int	invalid_args(int argc, char **argv)
-{
-	if (argc != 5)
-	{
-		ft_printf("Usage: ./pip file1 cmd1 cmd2 file2\n");
-		return (1);
-	}
-	else if (!argv[1][0] || !argv[4][0])
-	{
-		ft_printf("Error: infile or outfile is empty\n");
-		return (1);
-	}
 
-	else if (!argv[2][0] || !argv[3][0])
-	{
-		ft_printf("Error: cmd1 or cmd2 is empty\n");
-		return (1);
-	}
-	return (0);
-}
 
 t_pipe *init_structs(char **argv, char **envp)
 {
@@ -135,9 +88,7 @@ t_pipe *init_structs(char **argv, char **envp)
 	pip->infile = (t_cmd *)malloc(sizeof(t_cmd));
 	pip->outfile = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!pip->infile || !pip->outfile)
-	{
-		ft_printf("Memory allocation failed\n");
-	}
+
 	
 	pip->infile->fd = ft_open('R', argv[1]);
 	pip->infile->name = argv[1];
@@ -148,7 +99,7 @@ t_pipe *init_structs(char **argv, char **envp)
 	pip->outfile->cmd = ft_split(argv[3], ' ');
 	pip->paths = ft_split(getenv_paths(envp), ':');
 	
-	ft_printf("< %s %s | %s > %s\n", pip->infile->name, pip->infile->cmd[0], pip->outfile->cmd[0], pip->outfile->name);
+	// perror("< %s %s | %s > %s\n", pip->infile->name, pip->infile->cmd[0], pip->outfile->cmd[0], pip->outfile->name);
 	return (pip);
 }
 
@@ -156,7 +107,7 @@ t_pipe *init_structs(char **argv, char **envp)
 void	connect_files(t_pipe *pip)
 {
 	if (pipe(pip->newfd) < 0)
-		ft_printf("Error pipe\n");
+		handle_error(PIPE_FAIL, pip);
 }
 
 void fork_first_child(t_pipe *pip, char **envp)
@@ -172,11 +123,10 @@ void fork_first_child(t_pipe *pip, char **envp)
 		if (path)
 		{
 			execve(path, pip->infile->cmd, envp);
-			perror("Error executing cmd1");
+			handle_error(EXEC_FAIL, pip);
 		}
 		else
-			printf("Error: command not found\n");
-		exit(1);
+			handle_error(CMD_FAIL, pip);
 	}
 
 }
@@ -194,42 +144,34 @@ void	fork_second_child(t_pipe *pip, char **envp)
 		if (path)
 		{
 			execve(path, pip->outfile->cmd, envp);
-			perror("Error executing cmd2");
+			handle_error(EXEC_FAIL, pip);
 		}
 		else
-		{
-			printf("Error: command not found\n");
-		}
-		exit(1);
+			handle_error(CMD_FAIL, pip);
 	}
-
+	
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipe	*pip;
 
-	if (invalid_args(argc, argv))
-		return (1);
+	if (valid_args(argc, argv))
+	{
+		pip = init_structs(argv, envp);
 
-	pip = init_structs(argv, envp);
-	connect_files(pip);
-	// child for cmd1
-	fork_first_child(pip, envp);
-	// child for cmd2
-	fork_second_child(pip, envp);
+		connect_files(pip);
+		fork_first_child(pip, envp);
+		fork_second_child(pip, envp);
 
-	close(pip->newfd[0]);
-	close(pip->newfd[1]);
+		close(pip->newfd[0]);
+		close(pip->newfd[1]);
 
-	// close(pip->infile->fd);
-	// close(pip->outfile->fd);
-
-	// Wait for children to finish
-	waitpid(pip->infile->pid, NULL, 0);
-	waitpid(pip->outfile->pid, NULL, 0);
-
-
-	
-	return (0);
+		// Wait for children to finish
+		waitpid(pip->infile->pid, NULL, 0);
+		waitpid(pip->outfile->pid, NULL, 0);
+		return (0);
+	}
+	else
+		return (0);
 }

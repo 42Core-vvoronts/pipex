@@ -1,7 +1,7 @@
 # Compilation and flags
 CC					=	cc
 RM					=	rm -rf
-CFLAGS				=	-Wall -Wextra -Werror -g -MMD -MP -MF
+CFLAGS				=	-Wall -Wextra -Werror -g -MMD -MF
 MFLAGS				=	-C
 # Program name
 NAME				=	pipex
@@ -15,6 +15,7 @@ VPATH				=	./src/
 INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
 
 SRC 				=	pipex.c \
+						errors.c \
 
 LIB					=	./lib/libft.a \
 
