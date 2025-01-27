@@ -1,66 +1,72 @@
-# Compilation and flags
+# Compilation, flags, commands
 CC					=	cc
+CFLAGS				=	-Wall -Wextra -Werror -Wunreachable-code -g -MMD -MF
+MFLAGS				=	--no-print-directory -C
 RM					=	rm -rf
-CFLAGS				=	-Wall -Wextra -Werror -g -MMD -MF
-MFLAGS				=	-C
 # Program name
 NAME				=	pipex
 
 # Directories and paths
 INCLUDE_DIRS		=	./include \
-						./lib/include
-
-VPATH				=	./src/
-
-INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
-
-SRC 				=	pipex.c \
-						errors.c \
+						./lib/include \
+VPATH				=	./src \
 
 LIB					=	./lib/libft.a \
 
-OBJ					=	$(SRC:%.c=obj/$(NAME)/%.o)
+SRC 				=	main.c \
+						pipex.c \
+						memory.c \
+						getenv.c \
+						errors.c \
 
-DEP					=	$(SRC:%.c=dep/%.d) $(BONUS_SRC:%.c=dep/%.d)
+# Objects and dependencies
+OBJ					=	$(SRC:%.c=obj/%.o)
+DEP					=	$(SRC:%.c=dep/%.d)
+INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
 
 
-all: $(NAME)
-	@echo "$(GREEN)Making $(NAME)...$(RESET)"
+# Build all targets
+all: lib $(NAME)
 
-$(NAME): $(OBJ) libs
+# Link object files
+$(NAME): $(OBJ)
 	@$(CC) $(OBJ) $(LIB) -o $@
+	@echo "$(GREEN)$(NAME) has been build.$(RESET)"
 
-libs:
+# Build libraries
+lib:
 	@make $(MFLAGS) ./lib
 
 # Object files
-obj/$(NAME)/%.o: %.c | depdir objdir
-	@$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@
+obj/%.o: src/%.c | objdir depdir
+	@$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@ && echo "$(YELLOW)Compiling: $(notdir $<)$(RESET)"
 
+# Create obj directory
 objdir:
 	@mkdir -p obj
-	@mkdir -p obj/$(NAME)
 
+# Create dep directory
 depdir:
 	@mkdir -p dep
-	@mkdir -p dep/$(NAME)
 
 clean: cleanlib
+	@$(RM) obj
+	@$(RM) dep
 	@echo "$(YELLOW)Removing objects and deps...$(RESET)"
-	@$(RM) obj/$(NAME)
-	@$(RM) dep/$(NAME)
 # Clean lib
 cleanlib:
-	@echo "$(YELLOW)Cleaning library...$(RESET)"
 	@make clean $(MFLAGS) ./lib
+	@echo "$(YELLOW)Cleaning library...$(RESET)"
 
 fclean: clean cleanlib
+	@make clean $(MFLAGS) ./lib
+	@echo "$(RED)$(LIB) has been removed$(RESET)"
 	@$(RM) $(NAME)
 	@echo "$(RED)$(NAME) has been removed$(RESET)"
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re lib
 .DEFAULT_GOAL := all
 
 # Include the dependency files

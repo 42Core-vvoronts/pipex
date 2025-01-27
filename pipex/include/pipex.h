@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/26 18:13:51 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:50:18 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,44 +20,45 @@
 # include <unistd.h> 
 # include <sys/wait.h>
 
-#define SUCCESS          0
-#define SYNTAX_FAIL      1
-#define CMD_FAIL    	 2
-#define OPEN_FAIL		 3
-#define EXEC_FAIL        4
-#define PIPE_FAIL        5
-#define FOUND_FAIL       6
-#define MALLOC_FAIL		 7
-
+#define EXIT_CMD 127
 
 typedef struct s_cmd
 {
+	pid_t	pid;
 	int		fd;
-	int 	pid;
 	char	**cmd;
-	char	*name;
+	char	*file;
+	char 	*path;
 }	t_cmd;
 
-typedef struct s_pipe
+typedef struct s_context
 {
-	t_cmd 		*infile; //left
-	t_cmd 		*outfile; //right
-	int 		newfd[2];
-	char		**paths;
+	t_cmd 	*in;
+	t_cmd 	*out;
+	int 	read;
+	int 	write;
+	char	**paths;
 	
-} t_pipe;
+} t_context;
 
 
-// -- ERRORS --
-int		valid_args(int argc, char **argv);
-void	handle_error(int errno, t_pipe *pip);
-void	cleanup(t_pipe *pip);
+void	init_structs(t_context **p, char **argv, char **envp);
+void	error_exit(char *message, t_context *p);
+void	cleanup(t_context *p);
+void	validate_args(int argc, char **argv);
 
-// -- PIPEX --
-t_pipe	*init_pipe(void);
-void	connect_files(t_pipe *pip);
-void fork_first_child(t_pipe *pip, char **envp);
-void fork_second_child(t_pipe *pip, char **envp);
+int		ft_open(int flag, char *file, t_context *p);
+void	close_pipe(t_context *p);
+void	open_pipe(t_context *p);
+void	run_children(t_context *p, char **envp);
+
+char	*getenv_paths(char **envp, t_context *p);
+char	*peek(char **paths, char *cmd, t_context *p);
+
+
+
+int		exitcode(t_context *p);
+
 
 
 #endif
