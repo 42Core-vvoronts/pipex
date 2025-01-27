@@ -17,7 +17,7 @@ SRC 				=	main.c \
 						pipex.c \
 						memory.c \
 						getenv.c \
-						errors.c \
+						exits.c \
 
 # Objects and dependencies
 OBJ					=	$(SRC:%.c=obj/%.o)
