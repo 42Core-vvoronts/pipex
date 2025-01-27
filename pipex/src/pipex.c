@@ -25,57 +25,46 @@ int	ft_open(int flag, char *file, t_context *p)
 	return (fd);
 }
 
-int	run_children(t_context *p, char **envp)
+void child_one(t_context *p, char **envp)
 {
-	int exitcode;
+	close(p->read);
+	dup2(p->in->fd, STDIN_FILENO);
+	dup2(p->write, STDOUT_FILENO);
+	close(p->in->fd);
+	close(p->write);
 
+	p->in->path = peek(p->paths, p->in->cmd[0], p);
+	execve(p->in->path, p->in->cmd, envp);
+	error_exit(EXEC, p);
+}
+
+void	child_two(t_context *p, char **envp)
+{
+	close(p->write);
+	dup2(p->read, STDIN_FILENO);
+	dup2(p->out->fd, STDOUT_FILENO);
+	close(p->out->fd);
+	close(p->read);
+	
+	p->out->path = peek(p->paths, p->out->cmd[0], p);
+	execve(p->out->path, p->out->cmd, envp);
+	error_exit(EXEC, p);
+}
+
+void	run_children(t_context *p, char **envp)
+{
 	p->in->pid = fork();
 	if (p->in->pid == 0)
-	{
-		close(p->read);
-		dup2(p->in->fd, STDIN_FILENO);
-		dup2(p->write, STDOUT_FILENO);
-		close(p->in->fd);
-		close(p->write);
-
-		p->in->path = peek(p->paths, p->in->cmd[0], p);
-		execve(p->in->path, p->in->cmd, envp);
-		error_exit(EXEC, p);
-		
-	}
+		child_one(p, envp);
 	else if (p->in->pid < 0)
-	{
 		error_exit(FORK, p);
-	}
+
 	p->out->pid = fork();
 	if (p->out->pid == 0)
-	{
-		close(p->write);
-		dup2(p->read, STDIN_FILENO);
-		dup2(p->out->fd, STDOUT_FILENO);
-		close(p->out->fd);
-		close(p->read);
-		
-		p->out->path = peek(p->paths, p->out->cmd[0], p);
-		execve(p->out->path, p->out->cmd, envp);
-		error_exit(EXEC, p);
-	}	
+		child_two(p, envp);
 	else if (p->out->pid < 0)
-	{
 		error_exit(FORK, p);
-	}
-
-	close(p->in->fd);
-    close(p->out->fd);
-    close(p->read);
-    close(p->write);
-
-	waitpid(p->in->pid, &exitcode, 0);
-	waitpid(p->out->pid, &exitcode, 0);
-	if (WIFEXITED(exitcode))
-		return WEXITSTATUS(exitcode);
-	return (0);
-		
+	
 }
 
 void	open_pipe(t_context *p)

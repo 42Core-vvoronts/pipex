@@ -6,25 +6,29 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/27 18:33:48 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/27 19:04:18 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-// int	wait_processes(t_context *p)
-// {
-// 	int status;
-// 	int exitcode;
-
-// 	status = 0;
-// 	exitcode = 1;
-// 	waitpid(p->in->pid, NULL, 0);
-// 	waitpid(p->out->pid, &status, 0);
-// 	if (WIFEXITED(status))
-// 		exitcode = WEXITSTATUS(status);
-// 	return (exitcode);
-// }
+int	wait_processes(t_context *p)
+{
+	int status;
+	int exitcode;
+	
+	status = 0;
+	exitcode = 1;
+	close(p->in->fd);
+    close(p->out->fd);
+    close(p->read);
+    close(p->write);
+	waitpid(p->in->pid, NULL, 0);
+	waitpid(p->out->pid, &status, 0);
+	if (WIFEXITED(status))
+		exitcode = WEXITSTATUS(status);
+	return (exitcode);
+}
 
 void	error_exit(t_errno err, t_context *p) 
 {
@@ -32,7 +36,7 @@ void	error_exit(t_errno err, t_context *p)
 	{
 		perror("Error: command failed");
 		cleanup(p);
-		exit(1);
+		exit(127);
 	}
 	else if (err == ARGS)
 		perror("Error: invalid arguments. Usage: ./pipex <in> <cmd1> <cmd2> <out>\n");
