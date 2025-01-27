@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 09:36:10 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/27 11:53:06 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:21:03 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*getenv_paths(char **envp, t_context *p)
 			return (envp[i] + 5);
 		i++;
 	}
-	error_exit("No PATH in env", p);
+	error_exit(PATH, p);
 	return (NULL);
 }
 
@@ -37,7 +37,7 @@ char *peek(char **paths, char *cmd, t_context *p)
     {
         path = ft_strdup(cmd);
         if (!path)
-			error_exit("Malloc", p);
+			error_exit(MALLOC, p);
         return (path);
     }
 
@@ -52,5 +52,5 @@ char *peek(char **paths, char *cmd, t_context *p)
         free(path);
         i++;
     }
-    return (error_exit("Command not found", p), NULL);
+    return (NULL);
 }

@@ -21,63 +21,75 @@ int	ft_open(int flag, char *file, t_context *p)
 	else if (flag == 'W')
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
-		error_exit("Open failed", p);
+		error_exit(OPEN, p);
 	return (fd);
 }
 
-void	run_children(t_context *p, char **envp)
+int	run_children(t_context *p, char **envp)
 {
+	int exitcode;
+
 	p->in->pid = fork();
-	if (p->in->pid == -1)
-		error_exit("fork", p);
 	if (p->in->pid == 0)
 	{
+		close(p->read);
 		dup2(p->in->fd, STDIN_FILENO);
 		dup2(p->write, STDOUT_FILENO);
 		close(p->in->fd);
-		close(p->read);
 		close(p->write);
+
+		p->in->path = peek(p->paths, p->in->cmd[0], p);
 		execve(p->in->path, p->in->cmd, envp);
-		error_exit("execve", p);
+		error_exit(EXEC, p);
+		
+	}
+	else if (p->in->pid < 0)
+	{
+		error_exit(FORK, p);
 	}
 	p->out->pid = fork();
-	if (p->out->pid == -1)
-		error_exit("fork", p);
 	if (p->out->pid == 0)
 	{
+		close(p->write);
 		dup2(p->read, STDIN_FILENO);
 		dup2(p->out->fd, STDOUT_FILENO);
-		close(p->in->fd);
-		close(p->read);
-		close(p->write);
 		close(p->out->fd);
+		close(p->read);
+		
+		p->out->path = peek(p->paths, p->out->cmd[0], p);
 		execve(p->out->path, p->out->cmd, envp);
-		error_exit("execve", p);
+		error_exit(EXEC, p);
+	}	
+	else if (p->out->pid < 0)
+	{
+		error_exit(FORK, p);
 	}
+
+	close(p->in->fd);
+    close(p->out->fd);
+    close(p->read);
+    close(p->write);
+
+	waitpid(p->in->pid, &exitcode, 0);
+	waitpid(p->out->pid, &exitcode, 0);
+	if (WIFEXITED(exitcode))
+		return WEXITSTATUS(exitcode);
+	return (0);
+		
 }
 
-void open_pipe(t_context *p)
+void	open_pipe(t_context *p)
 {
-	int fd[2];
+	int	fd[2];
 
 	if (pipe(fd) == -1)
-		error_exit("pipe", p);
+		error_exit(PIPE, p);
 	p->read = fd[0];
 	p->write = fd[1];
 }
 
-void close_pipe(t_context *p)
+void	close_pipe(t_context *p)
 {
 	close(p->read);
     close(p->write);
-}
-
-int exitcode(t_context *p)
-{
-	int status;
-	waitpid(p->in->pid, NULL, 0);
-	waitpid(p->out->pid, &status, 0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (EXIT_FAILURE);
 }
