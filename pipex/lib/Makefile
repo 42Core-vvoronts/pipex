@@ -1,18 +1,22 @@
-# Compiler and flags
-CC					=	cc
-CFLAGS				=	-Wall -Wextra -Werror -g -MMD -MP
-RM					=	rm -rf
-MFLAGS				=	--no-print-directory -C
 # Name of the output library
 NAME 				=	libft.a
-
-# Directories and paths
+# Compilation, flags, commands
+CC					=	cc
+CFLAGS				=	-Wall -Wextra -Werror -g -MMD -MF
+MFLAGS				=	--no-print-directory -C
+RM					=	rm -rf
+# Include directories
 INCLUDE_DIRS		=	./include \
-VPATH				=	./src \
-
+# Include flags
+INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
+# Path to source files
+VPATH				=	./src: \
 # Source files
-SRC					= 	ft_isalpha.c ft_isdigit.c ft_isalnum.c \
-						ft_isascii.c ft_isprint.c \
+SRC					= 	ft_isalpha.c \
+						ft_isdigit.c \
+						ft_isalnum.c \
+						ft_isascii.c \
+						ft_isprint.c \
 						\
 						ft_memset.c ft_bzero.c ft_memcpy.c \
 						ft_memmove.c ft_memchr.c ft_memcmp.c \
@@ -33,12 +37,12 @@ SRC					= 	ft_isalpha.c ft_isdigit.c ft_isalnum.c \
 						ft_get_next_liner.c \
 						ft_putchar_fd.c ft_putstr_fd.c \
 						ft_putendl_fd.c ft_putnbr_fd.c \
-						ft_printf.c ft_print_alfa.c ft_print_numeric.c \
+						ft_printf.c \
+						ft_print_alfa.c ft_print_numeric.c \
 
 # Object and dep files
 OBJ 				=	$(SRC:%.c=obj/%.o)
 DEP 				= 	$(SRC:%.c=dep/%.d)
-INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
 
 all: $(NAME)
 
@@ -47,8 +51,8 @@ $(NAME): $(OBJ)
 	@echo "$(GREEN)$(NAME) has been build.$(RESET)"
 
 # Object files
-obj/%.o: src/%.c | objdir depdir
-	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@ && echo "$(YELLOW)Compiling $(notdir $<)$(RESET)"
+obj/%.o: %.c | objdir depdir
+	@$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@ && echo "$(YELLOW)Compiling $(notdir $<)$(RESET)"
 
 # Create obj directory
 objdir:

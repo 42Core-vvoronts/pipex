@@ -1,29 +1,28 @@
+# Program name
+NAME				=	pipex
 # Compilation, flags, commands
 CC					=	cc
 CFLAGS				=	-Wall -Wextra -Werror -Wunreachable-code -g -MMD -MF
 MFLAGS				=	--no-print-directory -C
 RM					=	rm -rf
-# Program name
-NAME				=	pipex
-
-# Directories and paths
+# Include directories
 INCLUDE_DIRS		=	./include \
 						./lib/include \
+# Include flags
+INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
+# Path to source files
 VPATH				=	./src \
-
+# Libraries
 LIB					=	./lib/libft.a \
-
+# Source files
 SRC 				=	main.c \
 						pipex.c \
 						memory.c \
 						getenv.c \
 						exits.c \
-
 # Objects and dependencies
 OBJ					=	$(SRC:%.c=obj/%.o)
 DEP					=	$(SRC:%.c=dep/%.d)
-INCLUDE				=	$(addprefix -I, $(INCLUDE_DIRS))
-
 
 # Build all targets
 all: lib $(NAME)
@@ -38,7 +37,7 @@ lib:
 	@make $(MFLAGS) ./lib
 
 # Object files
-obj/%.o: src/%.c | objdir depdir
+obj/%.o: %.c | objdir depdir
 	@$(CC) $(CFLAGS) dep/$(@:obj/%.o=%.d) $(INCLUDE) -c $< -o $@ && echo "$(YELLOW)Compiling: $(notdir $<)$(RESET)"
 
 # Create obj directory

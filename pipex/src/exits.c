@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/27 19:04:18 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/27 19:38:42 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	wait_processes(t_context *p)
     close(p->out->fd);
     close(p->read);
     close(p->write);
+	
 	waitpid(p->in->pid, NULL, 0);
 	waitpid(p->out->pid, &status, 0);
 	if (WIFEXITED(status))
@@ -52,8 +53,8 @@ void	error_exit(t_errno err, t_context *p)
 		perror("Error: fork() failed");
 	else if (err == DUP)
 		perror("Error: dup2() failed");
-	else if (err == NO_ACCESS)
-		perror("Error: no access");
+	else if (err == FILE_FAIL)
+		perror("Error: file doesn't exist or has no access");
 	else if (err == PATH)
 		perror("Error: path not found");
 	else if (err == MALLOC)

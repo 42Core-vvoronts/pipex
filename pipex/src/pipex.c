@@ -27,6 +27,8 @@ int	ft_open(int flag, char *file, t_context *p)
 
 void child_one(t_context *p, char **envp)
 {
+	if (access(p->in->file, F_OK) == -1 || access(p->in->file, R_OK) == -1)
+		exit(FILE_FAIL);
 	close(p->read);
 	dup2(p->in->fd, STDIN_FILENO);
 	dup2(p->write, STDOUT_FILENO);
@@ -40,6 +42,8 @@ void child_one(t_context *p, char **envp)
 
 void	child_two(t_context *p, char **envp)
 {
+	if (access(p->out->file, W_OK) == -1)
+		exit(FILE_FAIL);
 	close(p->write);
 	dup2(p->read, STDIN_FILENO);
 	dup2(p->out->fd, STDOUT_FILENO);

@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/27 18:56:03 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:09:24 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@
 # include <errno.h> 
 # include <sys/wait.h>
 
-#define FAIL -1
-#define SUCESS 0
+# define	FAIL -1
+# define	SUCESS 0
 
 typedef enum e_errno
 {
 	ARGS,
 	NO_FILE,
 	NO_CMD,
-	NO_ACCESS,
+	FILE_FAIL,
 	OPEN,
 	DUP,
 	PIPE,
@@ -40,21 +40,21 @@ typedef enum e_errno
 } t_errno;
 
 
-typedef struct s_cmd
+typedef struct	s_cmd
 {
-	pid_t	pid;
 	int		fd;
-	char	**cmd;
-	char	*file;
+	pid_t	pid;
 	char 	*path;
+	char	*file;
+	char	**cmd;
 }	t_cmd;
 
 typedef struct s_context
 {
-	t_cmd 	*in;
-	t_cmd 	*out;
-	int 	read;
-	int 	write;
+	int		read;
+	int		write;
+	t_cmd	*in;
+	t_cmd	*out;
 	char	**paths;
 	
 } t_context;
