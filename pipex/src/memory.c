@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 09:36:00 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 11:54:56 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:01:33 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	init_structs(t_context **p, char **argv, char **envp)
 	(*p)->out->file = argv[4];
 	(*p)->in->cmd = ft_split(argv[2], ' ');
 	(*p)->out->cmd = ft_split(argv[3], ' ');
-	(*p)->paths = ft_split(getenv_paths(envp, *p), ':');
+	(*p)->paths = ft_split(getenv_paths(envp), ':');
 	(*p)->in->path = NULL;
 	(*p)->out->path = NULL;
 	(*p)->read = 0;

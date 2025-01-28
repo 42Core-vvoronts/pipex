@@ -6,13 +6,13 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 09:36:10 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 11:53:54 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:03:26 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*getenv_paths(char **envp, t_context *p)
+char	*getenv_paths(char **envp)
 {
 	int	i;
 
@@ -23,11 +23,10 @@ char	*getenv_paths(char **envp, t_context *p)
 			return (envp[i] + 5);
 		i++;
 	}
-	error_exit(PATH, p);
 	return (NULL);
 }
 
-char	*peek(char **paths, char *cmd, t_context *p)
+char	*peek(char **paths, char *cmd)
 {
 	char	*temp;
 	char	*path;
@@ -38,7 +37,7 @@ char	*peek(char **paths, char *cmd, t_context *p)
 	{
 		path = ft_strdup(cmd);
 		if (!path)
-			error_exit(MALLOC, p);
+			exit(MALLOC);
 		return (path);
 	}
 	while (paths[i])

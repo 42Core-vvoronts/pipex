@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 11:52:56 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:50:10 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	wait_processes(t_context *p)
 	while (pid != -1)
 	{
 		pid = wait(&status);
+		perror_message(status);
 		if (pid == p->out->pid && WIFEXITED(status))
 			exitcode = WEXITSTATUS(status);
 	}
@@ -35,25 +36,13 @@ void	perror_message(t_errno err)
 	if (err == EXEC)
 		perror("Error: command failed");
 	else if (err == ARGS)
-		perror("Error. Usage: ./pipex <in> <cmd1> <cmd2> <out>\n");
+		ft_putendl_fd("Usage: ./pipex <in> <cmd1> <cmd2> <out>\n", STDERR);
 	else if (err == NO_CMD)
-		perror("Error: invalid command");
+		ft_putendl_fd("Error: invalid command", STDERR);
 	else if (err == NO_FILE)
-		perror("Error: invalid filename");
-	else if (err == OPEN)
-		perror("Error: can't open file");
-	else if (err == PIPE)
-		perror("Error: pipe() failed");
-	else if (err == FORK)
-		perror("Error: fork() failed");
-	else if (err == DUP)
-		perror("Error: dup2() failed");
-	else if (err == FILE_FAIL)
-		perror("Error: file doesn't exist or has no access");
-	else if (err == PATH)
-		perror("Error: path not found");
-	else if (err == MALLOC)
-		perror("Error: memory allocation failed");
+		ft_putendl_fd("Error: invalid filename", STDERR);
+	else
+		perror("Error");
 }
 
 void	error_exit(t_errno err, t_context *p)
@@ -65,8 +54,11 @@ void	error_exit(t_errno err, t_context *p)
 	else
 		exitcode = 1;
 	perror_message(err);
-	close_pipe(p);
-	cleanup(p);
+	if (p)
+	{
+		close_pipe(p);
+		cleanup(p);
+	}
 	exit(exitcode);
 }
 

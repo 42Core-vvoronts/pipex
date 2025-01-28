@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 11:56:07 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:54:07 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 # include <errno.h> 
 # include <sys/wait.h>
 
-# define FAIL -1
-# define SUCESS 0
+# define STDERR 2
 
 typedef enum e_errno
 {
@@ -65,8 +64,8 @@ int		ft_open(int flag, char *file, t_context *p);
 void	close_pipe(t_context *p);
 void	open_pipe(t_context *p);
 void	run_children(t_context *p, char **envp);
-char	*getenv_paths(char **envp, t_context *p);
-char	*peek(char **paths, char *cmd, t_context *p);
+char	*getenv_paths(char **envp);
+char	*peek(char **paths, char *cmd);
 int		wait_processes(t_context *p);
 void	perror_message(t_errno err);
 
