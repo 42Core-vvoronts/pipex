@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/27 19:38:42 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:52:56 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,28 @@
 
 int	wait_processes(t_context *p)
 {
-	int status;
-	int exitcode;
-	
+	pid_t	pid;
+	int		status;
+	int		exitcode;
+
+	pid = 0;
 	status = 0;
 	exitcode = 1;
-	close(p->in->fd);
-    close(p->out->fd);
-    close(p->read);
-    close(p->write);
-	
-	waitpid(p->in->pid, NULL, 0);
-	waitpid(p->out->pid, &status, 0);
-	if (WIFEXITED(status))
-		exitcode = WEXITSTATUS(status);
+	while (pid != -1)
+	{
+		pid = wait(&status);
+		if (pid == p->out->pid && WIFEXITED(status))
+			exitcode = WEXITSTATUS(status);
+	}
 	return (exitcode);
 }
 
-void	error_exit(t_errno err, t_context *p) 
+void	perror_message(t_errno err)
 {
 	if (err == EXEC)
-	{
 		perror("Error: command failed");
-		cleanup(p);
-		exit(127);
-	}
 	else if (err == ARGS)
-		perror("Error: invalid arguments. Usage: ./pipex <in> <cmd1> <cmd2> <out>\n");
+		perror("Error. Usage: ./pipex <in> <cmd1> <cmd2> <out>\n");
 	else if (err == NO_CMD)
 		perror("Error: invalid command");
 	else if (err == NO_FILE)
@@ -59,16 +54,28 @@ void	error_exit(t_errno err, t_context *p)
 		perror("Error: path not found");
 	else if (err == MALLOC)
 		perror("Error: memory allocation failed");
+}
+
+void	error_exit(t_errno err, t_context *p)
+{
+	int	exitcode;
+
+	if (err == EXEC)
+		exitcode = 127;
+	else
+		exitcode = 1;
+	perror_message(err);
+	close_pipe(p);
 	cleanup(p);
-	exit(EXIT_FAILURE);
+	exit(exitcode);
 }
 
 void	validate_args(int argc, char **argv)
 {
 	if (argc != 5)
 		error_exit(ARGS, NULL);
-	if (!argv[2][0]|| !argv[3][0])
+	if (!argv[2][0] || !argv[3][0])
 		error_exit(NO_CMD, NULL);
-	if (!argv[1][0]|| !argv[4][0])
+	if (!argv[1][0] || !argv[4][0])
 		error_exit(NO_FILE, NULL);
 }

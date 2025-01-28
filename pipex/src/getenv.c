@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 09:36:10 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/27 14:21:03 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:53:54 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	*getenv_paths(char **envp, t_context *p)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	while (envp[i])
 	{
@@ -27,30 +27,29 @@ char	*getenv_paths(char **envp, t_context *p)
 	return (NULL);
 }
 
-char *peek(char **paths, char *cmd, t_context *p)
+char	*peek(char **paths, char *cmd, t_context *p)
 {
-    char *temp;
-    char *path;
-    int i = 0;
+	char	*temp;
+	char	*path;
+	int		i;
 
-    if (ft_strchr(cmd, '/'))
-    {
-        path = ft_strdup(cmd);
-        if (!path)
+	i = 0;
+	if (ft_strchr(cmd, '/'))
+	{
+		path = ft_strdup(cmd);
+		if (!path)
 			error_exit(MALLOC, p);
-        return (path);
-    }
-
-    while (paths[i])
-    {
-        temp = ft_strjoin(paths[i], "/");
-        path = ft_strjoin(temp, cmd);
-        free(temp);
-        if (access(path, F_OK) == 0)
-            return (path);
-
-        free(path);
-        i++;
-    }
-    return (NULL);
+		return (path);
+	}
+	while (paths[i])
+	{
+		temp = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(temp, cmd);
+		free(temp);
+		if (access(path, F_OK) == 0)
+			return (path);
+		free(path);
+		i++;
+	}
+	return (NULL);
 }

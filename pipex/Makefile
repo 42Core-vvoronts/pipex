@@ -16,9 +16,10 @@ VPATH				=	./src \
 LIB					=	./lib/libft.a \
 # Source files
 SRC 				=	main.c \
+						fds.c \
+						getenv.c \
 						pipex.c \
 						memory.c \
-						getenv.c \
 						exits.c \
 # Objects and dependencies
 OBJ					=	$(SRC:%.c=obj/%.o)
