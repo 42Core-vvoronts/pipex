@@ -13,8 +13,9 @@
 #include "pipex.h"
 
 void	child_one(t_context *p, char **envp)
-	{
-	if (access(p->in->file, F_OK) == -1 || access(p->in->file, R_OK) == -1)
+{
+	p->in->fd = ft_open('R', p->in->file);
+	if (access(p->in->file, F_OK) == FAIL || access(p->in->file, R_OK) == FAIL)
 		exit(FILE_FAIL);
 	close(p->read);
 	dup2(p->in->fd, STDIN_FILENO);
@@ -28,7 +29,8 @@ void	child_one(t_context *p, char **envp)
 
 void	child_two(t_context *p, char **envp)
 {
-	if (access(p->out->file, W_OK) == -1)
+	p->out->fd = ft_open('W', p->out->file);
+	if (access(p->out->file, W_OK) == FAIL)
 		error_exit(FILE_FAIL, p);
 	close(p->write);
 	dup2(p->read, STDIN_FILENO);

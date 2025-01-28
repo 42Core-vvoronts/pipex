@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 12:50:10 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:52:09 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,19 @@ int	wait_processes(t_context *p)
 	while (pid != -1)
 	{
 		pid = wait(&status);
-		perror_message(status);
 		if (pid == p->out->pid && WIFEXITED(status))
+		{
 			exitcode = WEXITSTATUS(status);
+			perror_message(exitcode);
+		}
+		else
+		{
+			if (WIFEXITED(status))
+				perror_message(WEXITSTATUS(status));
+		}
 	}
+	if (exitcode == EXEC)
+		exitcode = 127;
 	return (exitcode);
 }
 

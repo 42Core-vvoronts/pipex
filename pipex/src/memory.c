@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 09:36:00 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 12:01:33 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:06:45 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	init_structs(t_context **p, char **argv, char **envp)
 	(*p)->out = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!(*p)->in || !(*p)->out)
 		error_exit(MALLOC, *p);
-	(*p)->in->fd = ft_open('R', argv[1], *p);
+	(*p)->in->fd = -1;
 	(*p)->in->file = argv[1];
-	(*p)->out->fd = ft_open('W', argv[4], *p);
+	(*p)->out->fd = -1;
 	(*p)->out->file = argv[4];
 	(*p)->in->cmd = ft_split(argv[2], ' ');
 	(*p)->out->cmd = ft_split(argv[3], ' ');
@@ -74,4 +74,5 @@ void	cleanup(t_context *p)
 		}
 		free(p);
 	}
+	p = NULL;
 }

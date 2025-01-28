@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 11:46:09 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 13:20:18 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:19:03 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	close_pipe(t_context *p)
 	close(p->write);
 }
 
-int	ft_open(int flag, char *file, t_context *p)
+int	ft_open(int flag, char *file)
 {
 	int	fd;
 
@@ -40,7 +40,5 @@ int	ft_open(int flag, char *file, t_context *p)
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else
 		fd = -1;
-	if (fd < 0)
-		error_exit(OPEN, p);
 	return (fd);
 }

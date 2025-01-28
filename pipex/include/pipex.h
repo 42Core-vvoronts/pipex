@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 12:54:07 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:41:10 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	init_structs(t_context **p, char **argv, char **envp);
 void	error_exit(t_errno err, t_context *p);
 void	cleanup(t_context *p);
 void	validate_args(int argc, char **argv);
-int		ft_open(int flag, char *file, t_context *p);
+int		ft_open(int flag, char *file);
 void	close_pipe(t_context *p);
 void	open_pipe(t_context *p);
 void	run_children(t_context *p, char **envp);
