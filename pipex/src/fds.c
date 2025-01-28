@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 11:46:09 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 11:53:19 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:20:18 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	ft_open(int flag, char *file, t_context *p)
 		fd = open(file, O_RDONLY);
 	else if (flag == 'W')
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else
+		fd = -1;
 	if (fd < 0)
 		error_exit(OPEN, p);
 	return (fd);
