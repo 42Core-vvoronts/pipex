@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 09:36:10 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 12:03:26 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:00:33 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ char	*peek(char **paths, char *cmd)
 {
 	char	*temp;
 	char	*path;
-	int		i;
 
-	i = 0;
 	if (ft_strchr(cmd, '/'))
 	{
 		path = ft_strdup(cmd);
@@ -40,15 +38,19 @@ char	*peek(char **paths, char *cmd)
 			exit(MALLOC);
 		return (path);
 	}
-	while (paths[i])
+	while (*paths)
 	{
-		temp = ft_strjoin(paths[i], "/");
+		temp = ft_strjoin(*paths, "/");
+		if (!temp)
+			exit(MALLOC);
 		path = ft_strjoin(temp, cmd);
+		if (!path)
+			exit(MALLOC);
 		free(temp);
 		if (access(path, F_OK) == 0)
 			return (path);
 		free(path);
-		i++;
+		paths++;
 	}
 	return (NULL);
 }
