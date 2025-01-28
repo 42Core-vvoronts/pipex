@@ -30,7 +30,7 @@ void	child_one(t_context *p, char **envp)
 void	child_two(t_context *p, char **envp)
 {
 	p->out->fd = ft_open('W', p->out->file);
-	if (access(p->out->file, W_OK) == FAIL)
+	if (p->out->fd == FAIL || access(p->out->file, W_OK) == FAIL)
 		error_exit(FILE_FAIL, p);
 	close(p->write);
 	dup2(p->read, STDIN_FILENO);
