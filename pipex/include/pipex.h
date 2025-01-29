@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 13:23:11 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:26:27 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 // Exitcodes
 # define SUCCESS         	0
-# define ERROR   			1
+# define STERROR   			1
 # define FAIL   			-1
 # define EXECUTE			127
 // Errors

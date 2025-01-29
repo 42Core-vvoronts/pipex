@@ -18,7 +18,7 @@ LIB					=	./lib/libft.a \
 SRC 				=	main.c \
 						fds.c \
 						getenv.c \
-						pipex.c \
+						forks.c \
 						memory.c \
 						exits.c \
 # Objects and dependencies

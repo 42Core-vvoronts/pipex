@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 12:00:58 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:17:44 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	wait_processes(t_context *p)
 	}
 	if (exitcode == EXEC || exitcode == NO_CMD)
 		exitcode = EXECUTE;
-	if (exitcode != SUCCESS)
-		exitcode = ERROR;
+	else if (exitcode != SUCCESS && exitcode != EXECUTE)
+		exitcode = STERROR;
 	return (exitcode);
 }
 
@@ -61,7 +61,7 @@ void	error_exit(t_errno err, t_context *p)
 	if (err == EXEC || err == NO_CMD)
 		exitcode = EXECUTE;
 	else
-		exitcode = ERROR;
+		exitcode = STERROR;
 	if (p)
 	{
 		close_pipe(p);
