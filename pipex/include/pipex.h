@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 11:55:49 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:23:11 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,12 @@
 # include <errno.h> 
 # include <sys/wait.h>
 
-
-// No errors
+// Exitcodes
 # define SUCCESS         	0
- // Generic errors
 # define ERROR   			1
 # define FAIL   			-1
- // Command not found
 # define EXECUTE			127
-
+// Errors
 typedef enum e_errno
 {
 	NOER,
@@ -45,7 +42,7 @@ typedef enum e_errno
 	PATH,
 	MALLOC
 }	t_errno;
-
+// Child
 typedef struct s_cmd
 {
 	int		fd;
@@ -54,7 +51,7 @@ typedef struct s_cmd
 	char	*file;
 	char	**cmd;
 }	t_cmd;
-
+// Pipe
 typedef struct s_context
 {
 	int		read;
@@ -68,7 +65,7 @@ typedef struct s_context
 void	validate_args(int argc, char **argv);
 void	init_structs(t_context **p, char **argv, char **envp);
 // -- RUN --
-void	open_pipe(t_context *p); 
+void	open_pipe(t_context *p);
 int		ft_open(int flag, char *file);
 void	run_children(t_context *p, char **envp);
 // -- COMMANDS --

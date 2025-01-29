@@ -15,13 +15,10 @@
 void	child_one(t_context *p, char **envp)
 {
 	p->in->fd = ft_open('R', p->in->file);
-	if ((p->in->fd == FAIL)
-		|| (access(p->in->file, F_OK) == FAIL)
+	if ((p->in->fd == FAIL) \
+		|| (access(p->in->file, F_OK) == FAIL) \
 		|| (access(p->in->file, R_OK) == FAIL))
-	{
-		cleanup(p);
-		exit(FILE_FAIL);
-	}
+		error_exit(FILE_FAIL, p);
 	close(p->read);
 	dup2(p->in->fd, STDIN_FILENO);
 	dup2(p->write, STDOUT_FILENO);
@@ -29,7 +26,7 @@ void	child_one(t_context *p, char **envp)
 	close(p->write);
 	p->in->path = peek(p->paths, p->in->cmd[0]);
 	if (!p->in->path)
-		errorexit(EXEC, p);
+		error_exit(EXEC, p);
 	execve(p->in->path, p->in->cmd, envp);
 	exit(EXEC);
 }
