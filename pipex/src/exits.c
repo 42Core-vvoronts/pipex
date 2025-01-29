@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 15:17:44 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:15:36 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ void	perror_message(t_errno err)
 	if (err == NO_CMD || err == EXEC)
 		ft_putendl_fd("pipex: command not found", STDERR_FILENO);
 	else if (err == ARGS)
-		ft_putendl_fd("pipex: : syntax error", STDERR_FILENO);
+		ft_putendl_fd("pipex: syntax error", STDERR_FILENO);
 	else if (err == NO_FILE)
-		ft_putendl_fd("pipex: : no such file or directory", STDERR_FILENO);
+		ft_putendl_fd("pipex: no such file or directory", STDERR_FILENO);
 	else if (errno != NOER)
 	{
 		perror("pipex: ");
@@ -62,11 +62,8 @@ void	error_exit(t_errno err, t_context *p)
 		exitcode = EXECUTE;
 	else
 		exitcode = STERROR;
-	if (p)
-	{
-		close_pipe(p);
-		cleanup(p);
-	}
+	close_pipe(p);
+	cleanup(p);
 	exit(exitcode);
 }
 

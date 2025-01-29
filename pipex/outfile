@@ -1,0 +1,13 @@
+Makefile
+aboba
+dep
+include
+infile
+infile_without_permissions
+leaks.txt
+lib
+obj
+outfile
+outfile_without_permissions
+pipex
+src

@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 11:46:09 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 14:26:36 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:19:47 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,17 @@ void	open_pipe(t_context *p)
 
 void	close_pipe(t_context *p)
 {
-	if (p->in->fd >= 0)
-		close(p->in->fd);
-	if (p->out->fd >= 0)
-		close(p->out->fd);
-	if (p->read >= 0)
-		close(p->read);
-	if (p->write >= 0)
-		close(p->write);
+	if (p)
+	{
+		if (p->in && p->in->fd >= 0)
+			close(p->in->fd);
+		if (p->out && p->out->fd >= 0)
+			close(p->out->fd);
+		if (p->read >= 0)
+			close(p->read);
+		if (p->write >= 0)
+			close(p->write);
+	}
 }
 
 int	ft_open(int flag, char *file)
