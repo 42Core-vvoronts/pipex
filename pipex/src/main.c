@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:59:11 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 13:26:23 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 17:17:55 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	int			exitcode;
 	t_context	*p;
+	int			exitcode;
 
 	exitcode = 0;
 	validate_args(argc, argv);
