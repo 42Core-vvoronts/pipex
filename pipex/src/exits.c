@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 13:52:09 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 09:36:44 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	wait_processes(t_context *p)
 void	perror_message(t_errno err)
 {
 	if (err == EXEC)
-		perror("Error: command failed");
+		perror("Pipex: command not found");
 	else if (err == ARGS)
 		ft_putendl_fd("Usage: ./pipex <in> <cmd1> <cmd2> <out>\n", STDERR);
 	else if (err == NO_CMD)
@@ -51,7 +51,7 @@ void	perror_message(t_errno err)
 	else if (err == NO_FILE)
 		ft_putendl_fd("Error: invalid filename", STDERR);
 	else
-		perror("Error");
+		perror("Pipex");
 }
 
 void	error_exit(t_errno err, t_context *p)
