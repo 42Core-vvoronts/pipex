@@ -29,7 +29,7 @@ void	child_one(t_context *p, char **envp)
 	close(p->write);
 	p->in->path = peek(p->paths, p->in->cmd[0]);
 	if (!p->in->path)
-		error_exit(EXEC, p);
+		errorexit(EXEC, p);
 	execve(p->in->path, p->in->cmd, envp);
 	exit(EXEC);
 }

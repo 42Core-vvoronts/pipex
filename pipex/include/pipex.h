@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/28 13:41:10 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:55:49 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,18 @@
 # include <errno.h> 
 # include <sys/wait.h>
 
-# define STDERR 2
+
+// No errors
+# define SUCCESS         	0
+ // Generic errors
+# define ERROR   			1
+# define FAIL   			-1
+ // Command not found
+# define EXECUTE			127
 
 typedef enum e_errno
 {
+	NOER,
 	ARGS,
 	NO_FILE,
 	NO_CMD,
@@ -56,17 +64,21 @@ typedef struct s_context
 	char	**paths;
 }	t_context;
 
-void	init_structs(t_context **p, char **argv, char **envp);
-void	error_exit(t_errno err, t_context *p);
-void	cleanup(t_context *p);
+// -- INIT --
 void	validate_args(int argc, char **argv);
+void	init_structs(t_context **p, char **argv, char **envp);
+// -- RUN --
+void	open_pipe(t_context *p); 
 int		ft_open(int flag, char *file);
-void	close_pipe(t_context *p);
-void	open_pipe(t_context *p);
 void	run_children(t_context *p, char **envp);
+// -- COMMANDS --
 char	*getenv_paths(char **envp);
 char	*peek(char **paths, char *cmd);
+// -- END --
+void	close_pipe(t_context *p);
 int		wait_processes(t_context *p);
 void	perror_message(t_errno err);
+void	error_exit(t_errno err, t_context *p);
+void	cleanup(t_context *p);
 
 #endif
