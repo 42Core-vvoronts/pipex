@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 13:26:27 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/29 17:05:19 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,39 @@
 # include <errno.h> 
 # include <sys/wait.h>
 
-// Exitcodes
-# define SUCCESS         	0
+// Main Exitcodes
+# define SUCCESS			0
 # define STERROR   			1
-# define FAIL   			-1
-# define EXECUTE			127
+// # define EXECUTE			127
 // Errors
-typedef enum e_errno
-{
-	NOER,
-	ARGS,
-	NO_FILE,
-	NO_CMD,
-	FILE_FAIL,
-	OPEN,
-	DUP,
-	PIPE,
-	FORK,
-	EXEC,
-	PATH,
-	MALLOC
-}	t_errno;
+# define EXEC				127
+# define NO_CMD				127
+# define ARGS				1
+# define NO_FILE			1
+# define FILE_FAIL			1
+# define OPEN				1
+# define DUP				1
+# define PIPE				1
+# define FORK				1
+# define PATH				1
+# define MALLOC				1
+# define FAIL   			-1
+
+// typedef enum e_errno
+// {
+// 	NOER,
+// 	ARGS,
+// 	NO_FILE,
+// 	NO_CMD,
+// 	FILE_FAIL,
+// 	OPEN,
+// 	DUP,
+// 	PIPE,
+// 	FORK,
+// 	EXEC,
+// 	PATH,
+// 	MALLOC
+// }	int;
 // Child
 typedef struct s_cmd
 {
@@ -74,8 +86,8 @@ char	*peek(char **paths, char *cmd);
 // -- END --
 void	close_pipe(t_context *p);
 int		wait_processes(t_context *p);
-void	perror_message(t_errno err);
-void	error_exit(t_errno err, t_context *p);
+void	perror_message(int err);
+void	error_exit(int err, t_context *p);
 void	cleanup(t_context *p);
 
 #endif
