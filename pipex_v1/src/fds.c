@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 11:46:09 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 16:19:47 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/31 19:09:19 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	open_pipe(t_context *p)
 	int	fd[2];
 
 	if (pipe(fd) == -1)
-		error_exit(PIPE, p);
+		error_exit(STERROR, p);
 	p->read = fd[0];
 	p->write = fd[1];
 }

@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 17:05:19 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/31 19:07:39 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@
 // Main Exitcodes
 # define SUCCESS			0
 # define STERROR   			1
-// # define EXECUTE			127
-// Errors
+# define DENIED				126
 # define EXEC				127
+// Errors
 # define NO_CMD				127
-# define ARGS				1
-# define NO_FILE			1
-# define FILE_FAIL			1
-# define OPEN				1
+# define ARGS				10
+# define NO_FILE			11
+# define NO_PERM			12
+# define FILE_FAIL			13
+# define OPEN				14
 # define DUP				1
 # define PIPE				1
 # define FORK				1

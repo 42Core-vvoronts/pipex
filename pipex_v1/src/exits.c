@@ -6,11 +6,21 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/29 17:21:10 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/31 19:12:15 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	set_exitcode(int *exitcode)
+{
+	if (*exitcode == SUCCESS)
+		return ;
+	if (*exitcode == DENIED || *exitcode == EXEC || *exitcode == NO_CMD)
+		return ;
+	else
+		*exitcode = STERROR;
+}
 
 int	wait_processes(t_context *p)
 {
@@ -32,6 +42,7 @@ int	wait_processes(t_context *p)
 		else if (pid == p->in->pid)
 			perror_message(WEXITSTATUS(status));
 	}
+	set_exitcode(&exitcode);
 	return (exitcode);
 }
 
@@ -41,6 +52,8 @@ void	perror_message(int err)
 		ft_putendl_fd("pipex: command not found", STDERR_FILENO);
 	else if (err == NO_FILE)
 		ft_putendl_fd("pipex: no such file or directory", STDERR_FILENO);
+	else if (err == NO_PERM || err == DENIED)
+		ft_putendl_fd("pipex: permission denied", STDERR_FILENO);
 	else if (err == ARGS)
 		ft_putendl_fd("pipex: syntax error", STDERR_FILENO);
 	else if (errno != SUCCESS)
