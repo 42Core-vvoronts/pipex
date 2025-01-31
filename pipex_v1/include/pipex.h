@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/31 19:07:39 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/01/31 19:40:29 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,8 @@
 # define NO_FILE			11
 # define NO_PERM			12
 # define FILE_FAIL			13
-# define OPEN				14
-# define DUP				1
-# define PIPE				1
-# define FORK				1
-# define PATH				1
-# define MALLOC				1
+# define MALLOC				14
 # define FAIL   			-1
-
-// typedef enum e_errno
-// {
-// 	NOER,
-// 	ARGS,
-// 	NO_FILE,
-// 	NO_CMD,
-// 	FILE_FAIL,
-// 	OPEN,
-// 	DUP,
-// 	PIPE,
-// 	FORK,
-// 	EXEC,
-// 	PATH,
-// 	MALLOC
-// }	int;
 // Child
 typedef struct s_cmd
 {
@@ -81,6 +60,7 @@ void	init_structs(t_context **p, char **argv, char **envp);
 void	open_pipe(t_context *p);
 int		ft_open(int flag, char *file);
 void	run_children(t_context *p, char **envp);
+void	wrapped(int result, t_context *p);
 // -- COMMANDS --
 char	*getenv_paths(char **envp);
 char	*peek(char **paths, char *cmd);

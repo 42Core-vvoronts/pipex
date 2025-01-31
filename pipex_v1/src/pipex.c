@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void wrapper(int result, t_context *p)
+void	wrapped(int result, t_context *p)
 {
 	if (result == FAIL)
 		error_exit(STERROR, p);
@@ -29,10 +29,10 @@ void	child_one(t_context *p, char **envp)
 		if (access(p->in->file, R_OK) == FAIL)
 			error_exit(NO_PERM, p);
 	}
-	dup2(p->in->fd, STDIN_FILENO);
-	dup2(p->write, STDOUT_FILENO);
-	close(p->in->fd);
-	close(p->write);
+	wrapped(dup2(p->in->fd, STDIN_FILENO), p);
+	wrapped(dup2(p->write, STDOUT_FILENO), p);
+	wrapped(close(p->in->fd), p);
+	wrapped(close(p->write), p);
 	if (!p->in->cmd || !p->in->cmd[0])
 		error_exit(NO_CMD, p);
 	p->in->path = peek(p->paths, p->in->cmd[0]);
@@ -49,12 +49,12 @@ void	child_two(t_context *p, char **envp)
 	if ((p->out->fd == FAIL))
 	{
 		if (access(p->out->file, W_OK) == FAIL)
-			error_exit(NO_PERM, p);		
+			error_exit(NO_PERM, p);
 	}
-	dup2(p->read, STDIN_FILENO);
-	dup2(p->out->fd, STDOUT_FILENO);
-	close(p->out->fd);
-	close(p->read);
+	wrapped(dup2(p->read, STDIN_FILENO), p);
+	wrapped(dup2(p->out->fd, STDOUT_FILENO), p);
+	wrapped(close(p->out->fd), p);
+	wrapped(close(p->read), p);
 	if (!p->out->cmd || !p->out->cmd[0])
 		error_exit(NO_CMD, p);
 	p->out->path = peek(p->paths, p->out->cmd[0]);
