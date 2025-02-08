@@ -22,7 +22,7 @@ void	child_one(t_context *p, char **envp)
 {
 	close(p->read);
 	p->in->fd = ft_open('R', p->in->file);
-	if ((p->in->fd == FAIL))
+	if (p->in->fd == FAIL)
 	{
 		if (access(p->in->file, F_OK) == FAIL)
 			error_exit(NO_FILE, p);
@@ -31,8 +31,16 @@ void	child_one(t_context *p, char **envp)
 	}
 	wrapped(dup2(p->in->fd, STDIN_FILENO), p);
 	wrapped(dup2(p->write, STDOUT_FILENO), p);
-	wrapped(close(p->in->fd), p);
-	wrapped(close(p->write), p);
+	if (p->in && p->in->fd >= 0)
+	{
+		wrapped(close(p->in->fd), p);
+		p->in->fd = -1;
+	}
+	if (p->write >= 0)
+	{
+		wrapped(close(p->write), p);
+		p->write = -1;
+	}
 	if (!p->in->cmd || !p->in->cmd[0])
 		error_exit(NO_CMD, p);
 	p->in->path = peek(p->paths, p->in->cmd[0]);
@@ -46,15 +54,23 @@ void	child_two(t_context *p, char **envp)
 {
 	close(p->write);
 	p->out->fd = ft_open('W', p->out->file);
-	if ((p->out->fd == FAIL))
+	if (p->out->fd == FAIL)
 	{
 		if (access(p->out->file, W_OK) == FAIL)
 			error_exit(NO_PERM, p);
 	}
 	wrapped(dup2(p->read, STDIN_FILENO), p);
 	wrapped(dup2(p->out->fd, STDOUT_FILENO), p);
-	wrapped(close(p->out->fd), p);
-	wrapped(close(p->read), p);
+	if (p->out && p->out->fd >= 0)
+	{
+		wrapped(close(p->out->fd), p);
+		p->in->fd = -1;
+	}
+	if (p->read >= 0)
+	{
+		wrapped(close(p->read), p);
+		p->read = -1;
+	}
 	if (!p->out->cmd || !p->out->cmd[0])
 		error_exit(NO_CMD, p);
 	p->out->path = peek(p->paths, p->out->cmd[0]);
