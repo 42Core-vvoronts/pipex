@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 18:02:23 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/02/08 09:23:25 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/02/08 09:30:12 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	perror_message(int err)
 
 void	error_exit(int err, t_context *p)
 {
-	// close_pipe(p);
 	cleanup(p);
 	exit(err);
 }

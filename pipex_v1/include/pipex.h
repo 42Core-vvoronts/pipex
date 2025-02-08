@@ -6,7 +6,7 @@
 /*   By: vvoronts <vvoronts@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:06 by vvoronts          #+#    #+#             */
-/*   Updated: 2025/01/31 19:40:29 by vvoronts         ###   ########.fr       */
+/*   Updated: 2025/02/08 09:33:59 by vvoronts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	init_structs(t_context **p, char **argv, char **envp);
 void	open_pipe(t_context *p);
 int		ft_open(int flag, char *file);
 void	run_children(t_context *p, char **envp);
-void	wrapped(int result, t_context *p);
+void	wrapped(int result, int code, t_context *p);
 // -- COMMANDS --
 char	*getenv_paths(char **envp);
 char	*peek(char **paths, char *cmd);
